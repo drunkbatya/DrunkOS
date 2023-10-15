@@ -1,3 +1,4 @@
-ASMFLAGS = -m=z80
-LDFLAGS = +z80 -create-app -zorg=0 --no-crt
+ASMFLAGS = -m=z80 -R
+LDFLAGS = +z80 --no-crt -create-app -zorg=0 -m
+#LDFLAGS = -m=z80 -b -m
 

@@ -5,9 +5,9 @@
 
 $(BUILDDIR)/%.o: %.s
 	@echo "\tASM\t" $<
-	@$(ASM) $(ASMFLAGS) $< -o=$@
+	@$(ASM) $(ASMFLAGS) $< -O=$(BUILDDIR)
 
-$(BUILDDIR)/firmware.bin: $(OBJECTS)
+$(BUILDDIR)/firmware.bin: $(OBJECTS) Makefile
 	@echo "\tLD\t" $@
-	@$(LD) $(LDFLAGS) $(OBJECTS) -o $@
+	@$(LD) $(LDFLAGS) $(OBJECTS) -o=$@
 
