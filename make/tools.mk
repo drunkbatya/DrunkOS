@@ -1,6 +1,10 @@
-CC = zcc
-ASM = z88dk-z80asm
-LD = zcc
+PREFIX = z80-elf-
+AS = $(PREFIX)as
+LD = $(PREFIX)ld
+CP = $(PREFIX)objcopy
+DU = $(PREFIX)objdump
+SZ = $(PREFIX)size
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
 PY = python3
-FLASHER = scripts/programmer.py
 ASSETS_COMPILLER = scripts/icon_convert.py

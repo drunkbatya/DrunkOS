@@ -1,19 +1,19 @@
-build: $(BUILDDIR)/firmware.bin
+all: $(BUILDDIR)/$(TARGET).elf $(BUILDDIR)/$(TARGET).bin
 
 .PHONY: disasm
-disasm: $(BUILDDIR)/firmware.bin
-	@echo "\tDISASM\t" $(BUILDDIR)/firmware.bin
-	@z88dk-dis -mz80 -o $(ROM_START) -x $(BUILDDIR)/firmware.map $(BUILDDIR)/firmware.bin
+disasm: $(BUILDDIR)/$(TARGET).elf
+	@echo "\tDISASM\t" $(BUILDDIR)/$(TARGET).elf
+	@$(DU) -d build/$(TARGET).elf
 
 .PHONY: xxd
-xxd: $(BUILDDIR)/firmware.bin
-	@echo "\tXXD\t" $(BUILDDIR)/firmware.bin
-	@xxd $(BUILDDIR)/firmware.bin
+xxd: $(BUILDDIR)/$(TARGET).bin
+	@echo "\tXXD\t" $(BUILDDIR)/$(TARGET).bin
+	@xxd $(BUILDDIR)/$(TARGET).bin
 
 .PHONY: flash
-flash: $(BUILDDIR)/firmware.bin
-	@echo "\tFLASH\t" $(BUILDDIR)/firmware.bin
-	@$(PY) $(FLASHER) --file ${OUTFILE_BASE}.bin --address 0
+flash: $(BUILDDIR)/$(TARGET).bin
+	@echo "\tFLASH\t" $(BUILDDIR)/$(TARGET).bin
+	@minipro --device "AT28C256" --write $(BUILDDIR)/$(TARGET).bin -s
 
 .PHONY: clean
 clean:

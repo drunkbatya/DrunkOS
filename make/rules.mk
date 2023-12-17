@@ -1,13 +1,12 @@
-#$(ASSETS_BUILD_DIR)/assets_icons.c: $(ASSETS_SOURCES) $(ASSETS_COMPILLER)
-#	@echo "\tASSETS\t" $@
-#	@mkdir -p $(ASSETS_BUILD_DIR)
-#	@$(ASSETS_COMPILLER) $(ASSETS_SOURCE_DIR) $(ASSETS_BUILD_DIR)
-
-$(BUILDDIR)/%.o: %.s
+$(BUILDDIR)/%.o: %.s $(MAKE_FILES) | $(BUILDDIR)
 	@echo "\tASM\t" $<
-	@$(ASM) $(ASMFLAGS) $< -O=$(BUILDDIR)
+	@$(AS) $(ASMFLAGS) $< -o $@
 
-$(BUILDDIR)/firmware.bin: $(OBJECTS) Makefile
+$(BUILDDIR)/$(TARGET).elf: $(OBJECTS) $(MAKE_FILES)
 	@echo "\tLD\t" $@
-	@$(LD) $(LDFLAGS) $(OBJECTS) -o=$@
+	@$(LD) $(LDFLAGS) $(OBJECTS) -o $@
+
+$(BUILDDIR)/%.bin: $(BUILDDIR)/%.elf | $(BUILDDIR)
+	@echo "\tBIN\t" $@
+	@$(BIN) $< $@
 
