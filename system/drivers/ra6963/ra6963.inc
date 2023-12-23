@@ -4,6 +4,7 @@ RA6963_SET_TEXT_AREA = 0x41
 RA6963_SET_GRAPHIC_HOME_ADDRES = 0x42
 RA6963_SET_GRAPHIC_AREA = 0x43
 RA6963_SET_ADDRESS_POINTER = 0x24
+RA6963_GRAPHIC_RAM_START_ADDR = 0x0800
 
 ; cursor
 RA6963_SET_1_LINE_CURSOR = 0xA0
@@ -32,7 +33,7 @@ RA6963_RESET_AUTO_WRITE = 0xB2
 .global ra6963_await_cmd_or_data
 .global ra6963_await_data_auto_mode_read
 .global ra6963_await_data_auto_mode_write
-.global ra6963_clear_text_area
+.global ra6963_clear
 .global ra6963_set_auto_write
 .global ra6963_reset_auto_write
 .global ra6963_set_address_pointer
