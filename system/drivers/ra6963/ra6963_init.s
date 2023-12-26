@@ -4,6 +4,7 @@
 .section .text
 
 ra6963_init:
+    push af
     ; set text home address
     call ra6963_await_cmd_or_data
     ld a, 0
@@ -31,7 +32,7 @@ ra6963_init:
     ld a, 0x00
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
-    ld a, 0x00 ; adress 0x0800
+    ld a, 0x00 ; adress 0 (maybe you want to set another in case of using text mode)
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
     ld a, RA6963_SET_GRAPHIC_HOME_ADDRES
@@ -63,4 +64,5 @@ ra6963_init:
     ld a, RA6963_SET_TEXT_OFF_GRAPHIC_ON
     out (IO_LCD_CMD_ADDR), a
 
+    pop af
     ret

@@ -9,7 +9,9 @@ from PIL import Image, ImageOps
 
 ICONS_SUPPORTED_FORMATS = ["png"]
 
-ICONS_TEMPLATE_INC_ICON_NAME = ".global {name}\n"
+ICONS_TEMPLATE_INC_ICON_NAME = """{name}_FIRST_CHAR = {first_char}
+.global {name}_arr
+"""
 
 ICONS_TEMPLATE_ASM_HEADER = ".section .rodata\n\n"
 ICONS_TEMPLATE_ASM_ICON = """{name}:
@@ -71,9 +73,9 @@ def _iconIsSupported(filename):
     extension = filename.lower().split(".")[-1]
     return extension in ICONS_SUPPORTED_FORMATS
 
-
 def icons(args):
     print("ICON: Converting icons")
+    os.makedirs(args.output_directory, exist_ok=True)
     icons_c = open(
         os.path.join(args.output_directory, f"{args.filename}.s"),
         "w",
@@ -112,6 +114,7 @@ def icons(args):
                 )
                 icons_c.write("\n")
                 font_icons.append((char_name, width, height, 0, 1))
+            icons_c.write(ICONS_TEMPLATE_ASM_ARR_HEADER.format(name=font_name))
         else:
             # process icons
             for filename in filenames:
@@ -131,7 +134,6 @@ def icons(args):
                 icons_c.write("\n")
                 icons.append((icon_name, width, height, 0, 1))
     print(f"ICON: Finalizing source file")
-    icons_c.write(ICONS_TEMPLATE_ASM_ARR_HEADER.format(name=font_name))
     for name, width, height, frame_rate, frame_count in font_icons:
         icons_c.write(ICONS_TEMPLATE_ASM_ARR_LINE.format(data=name))
 
@@ -144,10 +146,10 @@ def icons(args):
         "w",
         newline="\n",
     )
-    for name, width, height, frame_rate, frame_count in icons:
+    for name, width, height in icons:
         icons_h.write(ICONS_TEMPLATE_INC_ICON_NAME.format(name=name))
     for name in fonts:
-        icons_h.write(ICONS_TEMPLATE_INC_ICON_NAME.format(name=name))
+        icons_h.write(ICONS_TEMPLATE_INC_ICON_NAME.format(name=name, first_char=32))
     icons_h.close()
     print(f"ICON: Done")
     return 0

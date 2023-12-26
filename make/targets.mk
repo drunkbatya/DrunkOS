@@ -17,4 +17,5 @@ flash: $(BUILDDIR)/$(TARGET).bin
 
 .PHONY: clean
 clean:
-	-rm -rf ${BUILDDIR}
+	-rm -rf $(BUILDDIR)
+	-rm -rf $(ASSETSBUILDDIR)
