@@ -37,4 +37,14 @@ main:
     push hl
     call ra6963_set_pixel
 
+    ld hl, 0x3F00  ; y, x
+    push hl
+    call ra6963_set_pixel
+    ld hl, 0x3E01  ; y, x
+    push hl
+    call ra6963_set_pixel
+    ld hl, 0x3D02  ; y, x
+    push hl
+    call ra6963_set_pixel
+
     halt

@@ -60,8 +60,7 @@ def file2image(file):
     data = f.read().strip().replace("\n", "").replace(" ", "").split("=")[1][:-1]
     data_str = data[1:-1].replace(",", " ").replace("0x", "")
     data_bin = bytearray.fromhex(data_str)
-    data = b"\x00" + data_bin
-    return CImage(width, height, data)
+    return CImage(width, height, data_bin)
 
 
 def _icon2header(file):
@@ -72,6 +71,7 @@ def _icon2header(file):
 def _iconIsSupported(filename):
     extension = filename.lower().split(".")[-1]
     return extension in ICONS_SUPPORTED_FORMATS
+
 
 def icons(args):
     print("ICON: Converting icons")

@@ -9,7 +9,8 @@ $(BUILDDIR)/%.o: %.s $(ASSETSBUILDDIR)/$(ASSETSTARGET) $(MAKE_FILES) | $(BUILDDI
 $(BUILDDIR)/$(TARGET).elf: $(OBJECTS) $(MAKE_FILES)
 	@echo "\tLD\t" $@
 	@$(LD) $(LDFLAGS) $(OBJECTS) -o $@
-	@z80-elf-size -A -t build/firmware.elf | grep -e " "
+	@echo "\tSIZE\t" $@
+	@z80-elf-size -A -t $@ | grep -e " "
 
 $(BUILDDIR)/%.bin: $(BUILDDIR)/%.elf | $(BUILDDIR)
 	@echo "\tBIN\t" $@

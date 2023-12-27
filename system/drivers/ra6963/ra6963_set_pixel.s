@@ -20,24 +20,19 @@ ra6963_set_pixel_multiply_loop:
     djnz ra6963_set_pixel_multiply_loop  ; adding display width in bytes to addr 'y' times
 ra6963_set_pixel_multiply_loop_end:  ; now we have calculated 'y' offset in hl
     ld a, c  ; loading 'x' in a
-    or a  ; check if 'x' is 0
-    jr z, ra6963_set_pixel_divide_loop_end  ; skip dividing if 'x' is 0
     ld b, 8  ; we don't need 'y' value anymore
 ra6963_set_pixel_divide_loop:
     cp b  ; compairing 'x' in a with 8 (bits in byte) in b
     jr c, ra6963_set_pixel_divide_loop_end ; if x < 8, reminder in a, division ended
     inc hl  ; add one more byte to address
     sub b  ; subtracting 8 bits from 'x' (in a), keep going
-    jr z, ra6963_set_pixel_divide_loop_end  ; if no reminder (bit offset)
-    jr ra6963_set_pixel_divide_loop ; else continue
+    jr ra6963_set_pixel_divide_loop
 ra6963_set_pixel_divide_loop_end:
-    push af  ; storing remainder on stack
     push hl  ; setting integer part of address to display
     call ra6963_set_address_pointer
     pop hl  ; removing argument from stack
 
     call ra6963_await_cmd_or_data
-    pop af  ; restoring remainder from stack
     ld b, a  ; we need to invert the reminder
     ld a, 7  ; invert = 7 (max reminder value) - reminder
     sub b  ; 7 (in a) - reminder -> a
