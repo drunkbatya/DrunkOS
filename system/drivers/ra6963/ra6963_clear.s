@@ -12,6 +12,7 @@ ra6963_clear:
     ld hl, 0  ; start filling framebuffer from address zero
     push hl
     call ra6963_set_address_pointer
+    pop hl  ; removing argument from stack
 
     ld hl, RA6963_DISPLAY_WIDTH_BYTES * RA6963_DISPLAY_HEIGHT  ; framebuffer size
     ld bc, 0  ; to compare hl with
