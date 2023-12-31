@@ -50,6 +50,12 @@ ra6963_set_address_pointer:
 
     pop ix  ; restoring ix
     pop af  ; restoring af
+
+    exx  ; exchanging register pairs with its shadow
+    pop hl  ; return address
+    pop bc  ; arg1
+    push hl  ; return address
+    exx  ; restoring registers
     ret
 
 ra6963_set_cursor_position:
@@ -70,6 +76,12 @@ ra6963_set_cursor_position:
 
     pop ix  ; restoring ix
     pop af  ; restoring af
+
+    exx  ; exchanging register pairs with its shadow
+    pop hl  ; return address
+    pop bc  ; arg1
+    push hl  ; return address
+    exx  ; restoring registers
     ret
 
 ra6963_set_auto_write:

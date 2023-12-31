@@ -30,7 +30,6 @@ ra6963_set_pixel_divide_loop:
 ra6963_set_pixel_divide_loop_end:
     push hl  ; setting integer part of address to display
     call ra6963_set_address_pointer
-    pop hl  ; removing argument from stack
 
     call ra6963_await_cmd_or_data
     ld b, a  ; we need to invert the reminder
@@ -38,4 +37,5 @@ ra6963_set_pixel_divide_loop_end:
     sub b  ; 7 (in a) - reminder -> a
     add a, RA6963_SET_BIT  ; setting target bit (division reminder)
     out (IO_LCD_CMD_ADDR), a  ; executing SET BIT lcd instruction
+
     ret  ; fuf, going home

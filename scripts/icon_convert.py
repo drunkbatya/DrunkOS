@@ -9,11 +9,13 @@ from PIL import Image, ImageOps
 
 ICONS_SUPPORTED_FORMATS = ["png"]
 
-ICONS_TEMPLATE_INC_ICON_NAME = """{name}_FIRST_CHAR = {first_char}
-.global {name}_arr
+ICONS_TEMPLATE_INC_ICON_NAME = """.global {name}
 """
 
-ICONS_TEMPLATE_ASM_HEADER = ".section .rodata\n\n"
+ICONS_TEMPLATE_ASM_HEADER = """.include "assets/build/assets_icons.inc"
+.section .rodata
+
+"""
 ICONS_TEMPLATE_ASM_ICON = """{name}:
     {name}_width: .byte {width}
     {name}_height: .byte {height}
@@ -21,6 +23,13 @@ ICONS_TEMPLATE_ASM_ICON = """{name}:
 """
 ICONS_TEMPLATE_ASM_ARR_HEADER = "{name}_arr:\n"
 ICONS_TEMPLATE_ASM_ARR_LINE = "    .word {data}\n"
+
+
+def swap_bits(num):
+    num = (num & 0xF0) >> 4 | (num & 0x0F) << 4
+    num = (num & 0xCC) >> 2 | (num & 0x33) << 2
+    num = (num & 0xAA) >> 1 | (num & 0x55) << 1
+    return num
 
 
 class CImage:
@@ -34,7 +43,9 @@ class CImage:
             file.write(self.data)
 
     def data_as_carray(self):
-        return ", ".join("0x{:02x}".format(img_byte) for img_byte in self.data)
+        return ", ".join(
+            "0x{:02x}".format(swap_bits(img_byte)) for img_byte in self.data
+        )
 
 
 def is_file_an_icon(filename):
@@ -113,7 +124,7 @@ def icons(args):
                     )
                 )
                 icons_c.write("\n")
-                font_icons.append((char_name, width, height, 0, 1))
+                font_icons.append((char_name, width, height))
             icons_c.write(ICONS_TEMPLATE_ASM_ARR_HEADER.format(name=font_name))
         else:
             # process icons
@@ -121,20 +132,21 @@ def icons(args):
                 if not _iconIsSupported(filename):
                     continue
                 print(f"ICON: Processing icon {filename}")
-                icon_name = "I_" + "_".join(filename.split(".")[:-1]).replace("-", "_")
+                icon_name = "icon_" + "_".join(filename.split(".")[:-1]).replace(
+                    "-", "_"
+                )
                 fullfilename = os.path.join(dirpath, filename)
                 width, height, data = _icon2header(fullfilename)
-                frame_name = f"_{icon_name}_0"
-                icons_c.write(ICONS_TEMPLATE_C_FRAME.format(name=frame_name, data=data))
+                frame_name = icon_name
                 icons_c.write(
-                    ICONS_TEMPLATE_C_DATA.format(
-                        name=f"_{icon_name}", data=f"{{{frame_name}}}"
+                    ICONS_TEMPLATE_ASM_ICON.format(
+                        name=frame_name, width=width, height=height, data=data
                     )
                 )
                 icons_c.write("\n")
-                icons.append((icon_name, width, height, 0, 1))
+                icons.append((icon_name, width, height))
     print(f"ICON: Finalizing source file")
-    for name, width, height, frame_rate, frame_count in font_icons:
+    for name, width, height in font_icons:
         icons_c.write(ICONS_TEMPLATE_ASM_ARR_LINE.format(data=name))
 
     icons_c.close()
@@ -149,7 +161,7 @@ def icons(args):
     for name, width, height in icons:
         icons_h.write(ICONS_TEMPLATE_INC_ICON_NAME.format(name=name))
     for name in fonts:
-        icons_h.write(ICONS_TEMPLATE_INC_ICON_NAME.format(name=name, first_char=32))
+        icons_h.write(ICONS_TEMPLATE_INC_ICON_NAME.format(name=f"{name}_arr"))
     icons_h.close()
     print(f"ICON: Done")
     return 0

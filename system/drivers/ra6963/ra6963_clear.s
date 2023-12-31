@@ -1,6 +1,7 @@
 .include "drivers/ra6963/ra6963.inc"
 .include "drivers/ra6963/ra6963.inc"
 .include "hardware/io.inc"
+.include "assets/build/assets_icons.inc"
 
 .section .text
 
@@ -12,7 +13,6 @@ ra6963_clear:
     ld hl, 0  ; start filling framebuffer from address zero
     push hl
     call ra6963_set_address_pointer
-    pop hl  ; removing argument from stack
 
     ld hl, RA6963_DISPLAY_WIDTH_BYTES * RA6963_DISPLAY_HEIGHT  ; framebuffer size
     ld bc, 0  ; to compare hl with
@@ -24,7 +24,7 @@ ra6963_clear_loop:
     dec hl  ; going next byte
     or a  ; just for clear carry flag
     sbc hl, bc  ; compare with zero (all buffer filled)
-    jp nz, ra6963_clear_loop
+    jr nz, ra6963_clear_loop
     call ra6963_reset_auto_write
 
     pop af
