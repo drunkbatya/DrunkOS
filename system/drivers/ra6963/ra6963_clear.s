@@ -1,7 +1,7 @@
 .include "drivers/ra6963/ra6963.inc"
-.include "drivers/ra6963/ra6963.inc"
 .include "hardware/io.inc"
 .include "assets/build/assets_icons.inc"
+.include "display/display.inc"
 
 .section .text
 
@@ -27,8 +27,44 @@ ra6963_clear_loop:
     jr nz, ra6963_clear_loop
     call ra6963_reset_auto_write
 
+    call ra6963_draw_test_icon
+
     pop af
     pop bc
+    pop hl
+    ret
+
+ra6963_unwrap_ptr_to_ptr:
+    push ix  ; storing ix
+    push hl  ; storing hl
+    push de  ; storing de
+    ld ix, 8  ; there is no way to set load sp value to ix, skipping pushed 4 args and return address
+    add ix, sp  ; loading sp value to ix
+
+    ld l, (ix + 0)  ; loading high byte of icon ptr
+    ld h, (ix + 1)  ; loading low byte of icon ptr
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    ld (ix + 0), e
+    ld (ix + 1), d
+
+    pop de  ; restoring de
+    pop hl  ; restoring hl
+    pop ix  ; restoring ix
+
+    ret
+
+ra6963_draw_test_icon:
+    push hl
+
+    ld hl, 0x0105  ; y, x
+    push hl
+    ld hl, font_haxrcorp_arr + (('$' - 32) * 2) ; 36
+    push hl
+    call ra6963_unwrap_ptr_to_ptr
+    call display_draw_icon
+
     pop hl
     ret
 

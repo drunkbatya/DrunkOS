@@ -34,6 +34,10 @@ RA6963_SET_TEXT_OFF_GRAPHIC_ON_CURSOR_ON_BLINK_ON = 0x9B
 ; read/write
 RA6963_SET_AUTO_WRITE = 0xB0
 RA6963_RESET_AUTO_WRITE = 0xB2
+RA6963_DATA_WRITE_AND_INC_ADDR = 0xC0
+RA6963_DATA_READ_AND_INC_ADDR = 0xC1
+RA6963_DATA_WRITE = 0xC4
+RA6963_DATA_READ = 0xC5
 
 .global ra6963_init
 .global ra6963_await_cmd_or_data
@@ -43,7 +47,8 @@ RA6963_RESET_AUTO_WRITE = 0xB2
 .global ra6963_set_auto_write
 .global ra6963_reset_auto_write
 .global ra6963_set_address_pointer
-.global ra6963_set_cursor_position
 .global ra6963_set_pixel
+.global ra6963_modify_byte
+.global ra6963_draw_xbm
 
 ; vim: set ft=asm:

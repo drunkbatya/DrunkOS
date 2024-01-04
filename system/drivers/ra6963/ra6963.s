@@ -35,14 +35,14 @@ ra6963_await_data_auto_mode_write_loop:
 ra6963_set_address_pointer:
     push af  ; storing af
     push ix  ; storing ix
-    ld ix, 0  ; there is no way to set load sp value to ix
+    ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 2 reg pairs and the return address
     add ix, sp  ; loading sp value to ix
 
     call ra6963_await_cmd_or_data
-    ld a, (ix + 6)  ; writing low address byte first
+    ld a, (ix + 0)  ; writing low address byte first
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
-    ld a, (ix + 7)  ; writing high address byte last
+    ld a, (ix + 1)  ; writing high address byte last
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
     ld a, RA6963_SET_ADDRESS_POINTER
@@ -51,33 +51,7 @@ ra6963_set_address_pointer:
     pop ix  ; restoring ix
     pop af  ; restoring af
 
-    exx  ; exchanging register pairs with its shadow
-    pop hl  ; return address
-    pop bc  ; arg1
-    push hl  ; return address
-    exx  ; restoring registers
-    ret
-
-ra6963_set_cursor_position:
-    push af  ; storing af
-    push ix  ; storing ix
-    ld ix, 0  ; there is no way to set load sp value to ix
-    add ix, sp  ; loading sp value to ix
-
-    call ra6963_await_cmd_or_data
-    ld a, (ix + 6)  ; writing low address byte first
-    out (IO_LCD_DATA_ADDR), a
-    call ra6963_await_cmd_or_data
-    ld a, (ix + 7)  ; writing high address byte last
-    out (IO_LCD_DATA_ADDR), a
-    call ra6963_await_cmd_or_data
-    ld a, RA6963_SET_CURSOR_POSITION
-    out (IO_LCD_CMD_ADDR), a
-
-    pop ix  ; restoring ix
-    pop af  ; restoring af
-
-    exx  ; exchanging register pairs with its shadow
+    exx  ; exchanging register pairs with their shadow
     pop hl  ; return address
     pop bc  ; arg1
     push hl  ; return address
@@ -99,3 +73,39 @@ ra6963_reset_auto_write:
     out (IO_LCD_CMD_ADDR), a
     pop af  ; restoring af
     ret
+
+; About:
+;   Read-Modify-Write function. Reads byte from display, makes logical OR with the argument and writes back.
+; Warnings:
+;   1. Display address pointer will be increased (by 1 or 2, depends on the bit offset) after calling this function
+;   2. Display address must be set before calling this function
+; Args:
+;   uint8_t data
+ra6963_modify_byte:
+    push af  ; storing af
+    push ix  ; storing ix
+    ld ix, 6  ; there is no way to set load sp value to ix, skipping 2 pushed reg pairs and the return pointer
+    add ix, sp  ; loading sp value to ix
+
+    ld a, RA6963_DATA_READ  ; read byte pointed by display's address pointer first
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a  ; sending read byte command
+    call ra6963_await_cmd_or_data
+    in a, (IO_LCD_DATA_ADDR)  ; reading byte
+    or (ix + 0)  ; OR'ing current byte with data
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_DATA_ADDR), a  ; writing modified data
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a
+
+    pop ix  ; restoring ix
+    pop af  ; restoring af
+
+    exx  ; exchanging register pairs with their shadow
+    pop hl  ; return address
+    pop bc  ; arg1
+    push hl  ; return address
+    exx  ; restoring registers
+    ret
+
