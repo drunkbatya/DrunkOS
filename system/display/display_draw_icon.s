@@ -20,9 +20,9 @@
 ;       my_icon_data: .byte 0xAA, 0x8C, ... (offset 2)
 
 display_draw_icon:
-    push af  ; storing af
     push ix  ; storing ix
     push hl  ; storing hl
+    push de  ; storing de
 
     ld ix, 8  ; there is no way to set load sp value to ix, skipping pushed 3 reg pairs and return address
     add ix, sp  ; loading sp value to ix
@@ -42,9 +42,9 @@ display_draw_icon:
 
     call ra6963_draw_xbm
 
+    pop de  ; restoring de
     pop hl  ; restoring hl
     pop ix  ; restoring ix
-    pop af  ; restoring af
 
     exx  ; exchanging register pairs with they shadow
     pop hl  ; return address
