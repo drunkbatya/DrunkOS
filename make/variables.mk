@@ -10,6 +10,7 @@ INCLUDE = -Isystem
 
 ASM_SOURCES = $(ASSETSBUILDDIR)/$(ASSETSTARGET)
 ASM_SOURCES += $(shell find system -type f -name "*.s")
+ASM_SOURCES += $(shell find applications -type f -name "*.s")
 
 ASSETS_SOURCES = $(shell find ${ASSETSSRCDIR} -type f -name "*.png")
 

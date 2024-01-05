@@ -26,8 +26,12 @@ display_draw_char:
     ld h, (ix + 3)  ; loading y
     push hl  ; second argument of display_draw_icon function (x and y)
 
+    ld hl, (display_font)  ; loading display font
+
+    ld a, (display_font_offset)  ; loading font offset, can load only to a reg
+    ld b, a  ; to sub instr
     ld a, (ix + 0)  ; loading char to draw
-    sub 32  ; font offset
+    sub b  ; font offset
     sla a  ; pointer is 2 byte, multiplying (char code - font offset) to 2 by logical left shift
     ld e, a  ; there is no way to add 8 bit reg to 16 bit reg pair
     ld d, 0
