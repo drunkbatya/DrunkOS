@@ -4,4 +4,10 @@
 
 reset_handler:
     ld sp, _estack
+
+    init_data_section:
+        nop
+    init_bss_section:
+        nop
+
     jp main
