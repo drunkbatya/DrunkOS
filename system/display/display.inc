@@ -3,6 +3,7 @@
 .global display_draw_icon
 .global display_draw_char
 .global display_draw_str
+.global display_get_char_width
 
 ; variables
 .global display_font

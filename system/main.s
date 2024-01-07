@@ -1,24 +1,22 @@
 .include "main.inc"
 .include "display/display.inc"
+.include "terminal/terminal.inc"
+.include "applications/kutakbash/kutakbash.inc"
 
 .section .text
 
 main:
     call display_init
 
-    ld hl, 0x0105  ; y, x
+    ld hl, system_welcome_str
     push hl
-    ld hl, test_str
-    push hl
-    call display_draw_str
+    call terminal_putstr
 
-    ld hl, 0x3F00  ; y, x
-    push hl
-    call ra6963_set_pixel
+    call kutakbash_main
 
     halt
 
 .section .rodata
 
-test_str:
-    .asciz "Fuck You!# I'm testing this shit, and it semms to be ok!"
+system_welcome_str:
+    .asciz "Welcome to DrunkOS!\nDrunkOS 0.0.1 Zilog Z80\n\n"

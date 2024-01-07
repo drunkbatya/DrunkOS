@@ -4,6 +4,48 @@
 .section .text
 
 ; About:
+;   Returns char width
+; Args:
+;   unsigned char c - char to draw
+; Return:
+;   uint8_t width - char width
+; C prototype:
+;   uint8_t display_get_char_width(unsigned char c);
+display_get_char_width:
+    push af  ; storing af
+    push ix  ; storing ix
+    push hl  ; storing hl
+    push de  ; storing de
+
+    ld ix, 10  ; there is no way to set load sp value to ix, skipping pushed 4 reg pairs and return address
+    add ix, sp  ; loading sp value to ix
+
+    ld hl, (display_font)  ; loading display font
+
+    ld a, (display_font_offset)  ; loading font offset, can load only to a reg
+    ld b, a  ; to sub instr
+    ld a, (ix + 0)  ; loading char to draw
+    sub b  ; font offset
+    sla a  ; pointer is 2 byte, multiplying (char code - font offset) to 2 by logical left shift
+    ld e, a  ; there is no way to add 8 bit reg to 16 bit reg pair
+    ld d, 0  ; dummy byte
+    add hl, de  ; adding char to font array address
+    ld e, (hl)  ; unwrapping pointer to pointer
+    inc hl
+    ld d, (hl)  ; unwrapping pointer to pointer
+
+    ld a, (de)  ; first variable into icon structure is char width, accessing it to return
+    ld (ix + 0), a  ; rewriting stack arg!, returning char width
+    ld (ix + 1), 0  ; rewriting stack arg!, dummy byte
+
+    pop de  ; restoring de
+    pop hl  ; restoring hl
+    pop ix  ; restoring ix
+    pop af  ; restoring af
+
+    ret
+
+; About:
 ;   Draw char to x, y
 ; Args:
 ;   unsigned char c - char to draw
@@ -35,7 +77,6 @@ display_draw_char:
     sla a  ; pointer is 2 byte, multiplying (char code - font offset) to 2 by logical left shift
     ld e, a  ; there is no way to add 8 bit reg to 16 bit reg pair
     ld d, 0
-    ld hl, font_haxrcorp_arr  ; font array address
     add hl, de  ; adding char to font array address
     ld e, (hl)  ; unwrapping pointer to pointer
     inc hl
@@ -88,12 +129,15 @@ display_draw_str:
     display_draw_str_loop:
         ld a, (hl)  ; loading byte to draw
         or a  ; check if zero (null-terminator)
-        jp z, display_draw_str_loop_end
+        jr z, display_draw_str_loop_end
+
         ld c, a  ; char to draw
         ld b, 0  ; dummy byte
         push de  ; second argument of display_draw_char function (x and y)
         push bc  ; first argument of display_draw_char function (char to draw)
+
         call display_draw_char
+
         pop bc  ; display_draw_char return value, char width
         ld a, e  ; loading x to a (due to add instruction limmitations)
         add a, c  ; add char width to x
