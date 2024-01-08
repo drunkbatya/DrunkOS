@@ -19,4 +19,4 @@ main:
 .section .rodata
 
 system_welcome_str:
-    .asciz "Welcome to DrunkOS!\nDrunkOS 0.0.1 Zilog Z80\n\n"
+    .asciz "Welcome to DrunkOS!\n\n"

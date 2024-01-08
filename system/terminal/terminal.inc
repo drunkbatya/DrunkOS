@@ -5,6 +5,7 @@ TERMINAL_DISPLAY_WIDTH_BYTES = 240 / 8
 
 ; functions
 .global terminal_putstr
+.global terminal_putchar
 
 ; variables
 .global terminal_current_coordinates
