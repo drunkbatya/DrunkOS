@@ -1,7 +1,5 @@
 .include "drivers/ra6963/ra6963.inc"
 .include "hardware/io.inc"
-.include "assets/build/assets_icons.inc"
-.include "display/display.inc"
 
 .section .text
 
@@ -14,7 +12,7 @@ ra6963_clear:
     push hl
     call ra6963_set_address_pointer
 
-    ld hl, RA6963_DISPLAY_WIDTH_BYTES * RA6963_DISPLAY_HEIGHT  ; framebuffer size
+    ld hl, 2920  ; framebuffer size
     ld bc, 0  ; to compare hl with
     ld a, 0  ; cleared screen value
     call ra6963_set_auto_write

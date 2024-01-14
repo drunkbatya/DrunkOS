@@ -28,6 +28,8 @@ ra6963_set_pixel:
         sub b  ; subtracting 8 bits from 'x' (in a), keep going
         jr ra6963_set_pixel_divide_loop
     ra6963_set_pixel_divide_loop_end:
+    ld bc, (ra6963_zero_offset)  ; loading zero offset
+    add hl, bc  ; adding offset to the calculated address
     push hl  ; setting integer part of address to display
     call ra6963_set_address_pointer
 

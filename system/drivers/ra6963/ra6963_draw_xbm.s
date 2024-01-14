@@ -62,7 +62,7 @@ ra6963_get_address_and_bit_offset:
     push de  ; storing de
     push bc  ; storing bc
 
-    ld ix, 12  ; there is no way to set load sp value to ix, skipping pushed 3 reg pairs and return address
+    ld ix, 12  ; there is no way to set load sp value to ix, skipping pushed 5 reg pairs and the return address
     add ix, sp  ; loading sp value to ix
 
     ld hl, 0  ; display address pointer
@@ -135,6 +135,8 @@ ra6963_draw_xbm:
     pop hl  ; x bit offset
     ld (ix + 4), l  ; rewriting stack arg!, x now is only a bit offset of the already calculated display address
     pop hl  ; integer part of display address
+    ld bc, (ra6963_zero_offset)  ; loading zero offset
+    add hl, bc  ; adding offset to the calculated address
     ld b, (ix + 3)  ; icon height
     display_draw_xbm_height_loop:
         push hl  ; display address pointer

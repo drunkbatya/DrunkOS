@@ -39,6 +39,7 @@ RA6963_DATA_READ_AND_INC_ADDR = 0xC1
 RA6963_DATA_WRITE = 0xC4
 RA6963_DATA_READ = 0xC5
 
+; functions
 .global ra6963_init
 .global ra6963_await_cmd_or_data
 .global ra6963_await_data_auto_mode_read
@@ -50,5 +51,11 @@ RA6963_DATA_READ = 0xC5
 .global ra6963_set_pixel
 .global ra6963_modify_byte
 .global ra6963_draw_xbm
+.global ra6963_set_graphic_home_address
+.global ra6963_add_to_zero_offset
+.global ra6963_apply_zero_offset
+
+; variables
+.global ra6963_zero_offset
 
 ; vim: set ft=asm:

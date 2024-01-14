@@ -32,10 +32,37 @@ ra6963_await_data_auto_mode_write_loop:
     pop af  ; restoring af
     ret
 
-ra6963_set_address_pointer:
+ra6963_set_graphic_home_address:
     push af  ; storing af
     push ix  ; storing ix
     ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 2 reg pairs and the return address
+    add ix, sp  ; loading sp value to ix
+
+    ; set graphic home addres
+    call ra6963_await_cmd_or_data
+    ld a, (ix + 0)  ; address low byte
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, (ix + 1)  ; address high byte
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, RA6963_SET_GRAPHIC_HOME_ADDRES
+    out (IO_LCD_CMD_ADDR), a
+
+    pop ix  ; restoring ix
+    pop af  ; restoring af
+
+    exx  ; exchanging register pairs with their shadow
+    pop hl  ; return address
+    pop bc  ; arg1
+    push hl  ; return address
+    exx  ; restoring registers
+    ret
+
+ra6963_set_address_pointer:
+    push af  ; storing af
+    push ix  ; storing ix
+    ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 3 reg pairs and the return address
     add ix, sp  ; loading sp value to ix
 
     call ra6963_await_cmd_or_data
@@ -77,7 +104,7 @@ ra6963_reset_auto_write:
 ; About:
 ;   Read-Modify-Write function. Reads byte from display, makes logical OR with the argument and writes back.
 ; Warnings:
-;   1. Display address pointer will be increased (by 1 or 2, depends on the bit offset) after calling this function
+;   1. Display address pointer will be increased after calling this function
 ;   2. Display address must be set before calling this function
 ; Args:
 ;   uint8_t data
@@ -95,7 +122,8 @@ ra6963_modify_byte:
     or (ix + 0)  ; OR'ing current byte with data
     call ra6963_await_cmd_or_data
     out (IO_LCD_DATA_ADDR), a  ; writing modified data
-    ld a, RA6963_DATA_WRITE_AND_INC_ADDR
+
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR  ; display address pointer will be incremented
     call ra6963_await_cmd_or_data
     out (IO_LCD_CMD_ADDR), a
 
@@ -108,4 +136,3 @@ ra6963_modify_byte:
     push hl  ; return address
     exx  ; restoring registers
     ret
-
