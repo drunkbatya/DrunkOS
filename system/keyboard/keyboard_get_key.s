@@ -47,12 +47,17 @@ keyboard_get_key:
         ld b, 8  ; keyboard column loop
         ld c, 1  ; hardware column bitmask
         keyboard_get_key_column_loop:
-            ld e, a
+            ld e, a  ; storing a
             and c  ; if current hardware column bitmask matches pressed key
-            ld a, e
-            ; check zero here
+            ld a, e  ; restoring a
+            jr z, keyboard_get_key_column_loop_again
+            ld e, a  ; storing a
+            ld a, (hl)  ; trying to access found char
+            or a  ; if it not zero
+            ld a, e  ; restoring a
             jr nz, keyboard_get_key_key_found
-            sla c  ; going to the next hardware column
+            keyboard_get_key_column_loop_again:
+            sla c  ; shifting left, going to the next hardware column
             inc hl  ; increasing the keyboard_matrix_map ptr
             djnz keyboard_get_key_column_loop
         keyboard_get_key_column_loop_end:
