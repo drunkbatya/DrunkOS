@@ -30,14 +30,14 @@ SECTIONS {
         *(.data*)
         _edata = .;
     } >SRAM AT> FLASH
+    _data_size = SIZEOF(.data);
 
     .bss : {
         _sbss = .;
-        __bss_start__ = _sbss;
         *(.bss)
         *(.bss*)
         *(COMMON)
         _ebss = .;
-        __bss_end__ = _ebss;
     } >SRAM
+    _bss_size = SIZEOF(.bss);
 }
