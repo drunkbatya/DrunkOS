@@ -5,7 +5,7 @@ MEMORY {
     SRAM (xrw) : ORIGIN = 0x4000, LENGTH = 48K
 }
 
-_estack = ORIGIN(SRAM) + LENGTH(SRAM) - 1;
+_estack = ORIGIN(SRAM) + LENGTH(SRAM);
 
 SECTIONS {
     .reset_handler : {

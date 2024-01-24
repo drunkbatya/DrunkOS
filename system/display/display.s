@@ -6,6 +6,11 @@
 display_init:
     call ra6963_init
     call ra6963_clear
+
+    ld hl, 0
+    push hl
+    call ra6963_set_graphic_home_address
+
     ret
 
 .section .data

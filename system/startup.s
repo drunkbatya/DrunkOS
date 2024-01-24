@@ -17,7 +17,7 @@ reset_handler:
     init_data_section_end:
 
     init_bss_section:
-        ; _sdata, _data_size and _sidata are defined by linker script
+        ; _sbss and _bss_size are defined by linker script
         ld bc, _bss_size  ; sizeof .bss section
         ld hl, _sbss  ; start address of .bss section
         init_bss_section_loop:

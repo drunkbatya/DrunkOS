@@ -54,6 +54,7 @@ RA6963_DATA_READ = 0xC5
 .global ra6963_set_graphic_home_address
 .global ra6963_add_to_zero_offset
 .global ra6963_apply_zero_offset
+.global ra6963_memset
 
 ; variables
 .global ra6963_zero_offset

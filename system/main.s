@@ -27,4 +27,4 @@ system_welcome_str:
     .asciz "Welcome to DrunkOS!\n\n"
 
 system_test_str:
-    .asciz "Test.\nTest..\nTest...\nTest....\nTest.....\n"
+    .asciz "Test.\nTest..\nTest...\nTest....\nTest.....\nTest......\n"

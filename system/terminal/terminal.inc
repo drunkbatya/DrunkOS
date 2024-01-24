@@ -7,6 +7,7 @@ TERMINAL_LINE_HEIGHT_BYTES = TERMINAL_LINE_HEIGHT * TERMINAL_DISPLAY_WIDTH_BYTES
 ; functions
 .global terminal_putstr
 .global terminal_putchar
+.global terminal_process_newline
 
 ; variables
 .global terminal_current_coordinates

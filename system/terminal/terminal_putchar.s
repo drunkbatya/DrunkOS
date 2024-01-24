@@ -3,34 +3,6 @@
 
 .section .text
 
-terminal_process_newline:
-    push af  ; storing af
-    push ix  ; storing ix
-    push hl  ; storing hl
-    push de  ; storing de
-    push bc  ; storing bc
-
-    ld ix, 12  ; there is no way to set load sp value to ix, skipping pushed 3 reg pairs and return address
-    add ix, sp  ; loading sp value to ix
-
-    ld hl, TERMINAL_LINE_HEIGHT_BYTES  ; moving display graphic home address to (current + TERMINAL_LINE_HEIGHT_BYTES)
-    push hl  ; 1st arg of the ra6963_add_to_zero_offset function
-    call ra6963_add_to_zero_offset  ; adding TERMINAL_LINE_HEIGHT_BYTES to the display graphic home address
-    call ra6963_apply_zero_offset  ; applying offset
-
-    ld a, (ix + 1)  ; loading y to a
-    sub TERMINAL_LINE_HEIGHT  ; subtracting one line
-    ld (ix + 1), a  ; rewriting stack arg!, 'y' = 'y' - TERMINAL_LINE_HEIGHT
-
-    pop bc  ; restoring bc
-    pop de  ; restoring de
-    pop hl  ; restoring hl
-    pop ix  ; restoring ix
-    pop af  ; restoring af
-
-    ; clear line
-    ret
-
 ; About:
 ;   Private function: processing new line
 terminal_newline:

@@ -6,6 +6,7 @@
 
 kutakbash_main:
     push hl
+    push af
 
     ld hl, kutakbash_prompt
     push hl
@@ -15,27 +16,18 @@ kutakbash_main:
     push hl
     call terminal_putstr
 
-    call keyboard_get_key
-    pop hl
-    ld b, 8
-    test_loop:
-        bit 0, l
-        jr z, test_zero
+    kutakbash_main_loop:
+        call keyboard_get_key
+        pop hl
 
-        ld de, test_one
-        push de
-        call terminal_putstr
-        jr test_end
+        ld a, l  ; loading byte
+        or a  ; if it zero?
+        jr z, kutakbash_main_loop
+        push hl
+        call terminal_putchar
+        jr kutakbash_main_loop
 
-        test_zero:
-        ld de, test_none
-        push de
-        call terminal_putstr
-
-        test_end:
-        srl l
-        djnz test_loop
-
+    pop af
     pop hl
     ret
 
