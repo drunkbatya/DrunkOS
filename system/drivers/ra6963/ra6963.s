@@ -8,9 +8,9 @@ ra6963_await_cmd_or_data:
 ra6963_await_cmd_or_data_loop:
     in a, (IO_LCD_CMD_ADDR)
     bit 0, a ; checking STA0 - command execution capability
-    jp z, ra6963_await_cmd_or_data_loop ; if no (z flag is set means bit 0 = 0) loop again
+    jr z, ra6963_await_cmd_or_data_loop ; if no (z flag is set means bit 0 = 0) loop again
     bit 1, a ; checking STA1 - data read/write capability (must be checked with STA0)
-    jp z, ra6963_await_cmd_or_data_loop ; if no (z flag is set means bit 1 = 0) loop again
+    jr z, ra6963_await_cmd_or_data_loop ; if no (z flag is set means bit 1 = 0) loop again
     pop af  ; restoring af
     ret
 
@@ -19,7 +19,7 @@ ra6963_await_data_auto_mode_read:
 ra6963_await_data_auto_mode_read_loop:
     in a, (IO_LCD_CMD_ADDR)
     bit 2, a ; checking STA2 - auto mode data read capability
-    jp z, ra6963_await_data_auto_mode_read_loop ; if no (z flag is set means bit 2 = 0) loop again
+    jr z, ra6963_await_data_auto_mode_read_loop ; if no (z flag is set means bit 2 = 0) loop again
     pop af  ; restoring af
     ret
 
@@ -28,7 +28,7 @@ ra6963_await_data_auto_mode_write:
 ra6963_await_data_auto_mode_write_loop:
     in a, (IO_LCD_CMD_ADDR)
     bit 3, a ; checking STA3 - auto mode data write capability
-    jp z, ra6963_await_data_auto_mode_write_loop ; if no (z flag is set means bit 3 = 0) loop again
+    jr z, ra6963_await_data_auto_mode_write_loop ; if no (z flag is set means bit 3 = 0) loop again
     pop af  ; restoring af
     ret
 
