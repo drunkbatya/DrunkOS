@@ -6,3 +6,5 @@
 ; variables
 .global keyboard_matrix_map
 .global keyboard_matrix_map_shift
+
+; vim: set ft=asm:

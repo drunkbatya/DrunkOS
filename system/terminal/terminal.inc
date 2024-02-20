@@ -14,5 +14,6 @@ TERMINAL_INPUT_STRING_SIZE = 100 ; bytes
 ; variables
 .global terminal_current_coordinates
 .global terminal_input_string
+.global terminal_move_visible_area_flag
 
 ; vim: set ft=asm:

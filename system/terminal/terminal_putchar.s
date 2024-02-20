@@ -17,7 +17,11 @@ terminal_newline:
     cp TERMINAL_DISPLAY_HEIGHT - TERMINAL_LINE_HEIGHT  ; comparing 'y' + one line with the visible area
     jr z, terminal_newline_end  ; if y + one line == max visible area line, skipping
     jr c, terminal_newline_end  ; if y + one line < visible area, skipping
+    ld a, (terminal_move_visible_area_flag)  ; if we should shift visible area?
+    or a  ; if terminal_move_visible_area_flag is zero?
+    jr z, terminal_newline_end  ; if terminal_move_visible_area_flag is reset, skipping
 
+    ; moving visible area one line down
     push de  ; pushing current coordinates
     call terminal_process_newline
     pop de  ; returning new ccordinates

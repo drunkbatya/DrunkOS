@@ -9,6 +9,9 @@ terminal_current_coordinates:
     terminal_current_x: .byte 0
     terminal_current_y: .byte 4
 
+terminal_move_visible_area_flag:
+    .byte 1
+
 .section .bss
 
 terminal_input_string:
