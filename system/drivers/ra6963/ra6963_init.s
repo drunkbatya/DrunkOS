@@ -57,7 +57,7 @@ ra6963_init:
 
     ; display mode
     call ra6963_await_cmd_or_data
-    ld a, RA6963_SET_TEXT_OFF_GRAPHIC_ON
+    ld a, RA6963_SET_TEXT_ON_GRAPHIC_OFF_CURSOR_ON_BLINK_ON
     out (IO_LCD_CMD_ADDR), a
 
     pop hl

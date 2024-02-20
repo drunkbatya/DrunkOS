@@ -3,21 +3,74 @@
 .include "terminal/terminal.inc"
 .include "applications/kutakbash/kutakbash.inc"
 .include "drivers/ra6963/ra6963.inc"
+.include "hardware/io.inc"
 
 .section .text
 
 main:
-    call display_init
+    call ra6963_init
+    call ra6963_clear
+    ; call display_init
 
-    ld hl, system_welcome_str
+    ; set cursor ptr
+    call ra6963_await_cmd_or_data
+    ld a, 5  ; x
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, 0  ; y
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, 0b00100001
+    out (IO_LCD_CMD_ADDR), a
+
+    ld hl, 0
     push hl
-    call terminal_putstr
+    call ra6963_set_address_pointer
 
-    ld hl, system_test_str
-    push hl
-    call terminal_putstr
+    ld a, 'F' - 32
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_DATA_ADDR), a  ; writing modified data
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR  ; display address pointer will be incremented
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a
 
-    call kutakbash_main
+    ld a, 'u' - 32
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_DATA_ADDR), a  ; writing modified data
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR  ; display address pointer will be incremented
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a
+
+    ld a, 'c' - 32
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_DATA_ADDR), a  ; writing modified data
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR  ; display address pointer will be incremented
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a
+
+    ld a, 'k' - 32
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_DATA_ADDR), a  ; writing modified data
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR  ; display address pointer will be incremented
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a
+
+    ld a, '!' - 32
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_DATA_ADDR), a  ; writing modified data
+    ld a, RA6963_DATA_WRITE_AND_INC_ADDR  ; display address pointer will be incremented
+    call ra6963_await_cmd_or_data
+    out (IO_LCD_CMD_ADDR), a
+
+    ;ld hl, system_welcome_str
+    ;push hl
+    ;call terminal_putstr
+
+    ;ld hl, system_test_str
+    ;push hl
+    ;call terminal_putstr
+
+    ;call kutakbash_main
 
     halt
 
