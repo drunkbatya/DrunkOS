@@ -26,9 +26,6 @@ terminal_get_input_string:
 
     ld de, terminal_input_string  ; buffer add to
 
-    ld a, 1  ; one
-    ld (terminal_move_visible_area_flag), a  ; setting flag to allow shifting a visible area
-
     terminal_get_input_string_loop:
         call keyboard_get_key  ; reading keyboard
         pop hl  ; return char code
@@ -64,8 +61,6 @@ terminal_get_input_string:
     push hl  ; new line char in l
     call terminal_putchar  ; print new line character directly without adding it to the buffer
     terminal_get_input_string_loop_end:
-    ld a, 1  ; one
-    ld (terminal_move_visible_area_flag), a  ; setting flag to allow shifting a visible area
     ld (ix + 0), e  ; input buffer ptr low byte
     ld (ix + 1), d  ; input buffer ptr high byte
 
