@@ -8,19 +8,13 @@ ra6963_init:
     push hl
 
     ; set text home address
-    call ra6963_await_cmd_or_data
-    ld a, 0
-    out (IO_LCD_DATA_ADDR), a
-    call ra6963_await_cmd_or_data
-    ld a, 0
-    out (IO_LCD_DATA_ADDR), a
-    call ra6963_await_cmd_or_data
-    ld a, RA6963_SET_TEXT_HOME_ADDR
-    out (IO_LCD_CMD_ADDR), a
+    ld hl, 0
+    push hl
+    call ra6963_set_text_home_address
 
     ; set text area
     call ra6963_await_cmd_or_data
-    ld a, 0x1E ; 240/8
+    ld a, 240 / 8
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
     ld a, 0x00

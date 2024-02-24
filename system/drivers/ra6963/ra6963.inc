@@ -4,9 +4,9 @@ RA6963_DISPLAY_HEIGHT = 64
 RA6963_DISPLAY_WIDTH_BYTES = 240 / 8
 
 ; main
-RA6963_SET_TEXT_HOME_ADDR = 0x40
+RA6963_SET_TEXT_HOME_ADDRESS = 0x40
 RA6963_SET_TEXT_AREA = 0x41
-RA6963_SET_GRAPHIC_HOME_ADDRES = 0x42
+RA6963_SET_GRAPHIC_HOME_ADDRESS = 0x42
 RA6963_SET_GRAPHIC_AREA = 0x43
 RA6963_SET_ADDRESS_POINTER = 0x24
 RA6963_GRAPHIC_RAM_START_ADDR = 0x0000
@@ -39,6 +39,9 @@ RA6963_DATA_READ_AND_INC_ADDR = 0xC1
 RA6963_DATA_WRITE = 0xC4
 RA6963_DATA_READ = 0xC5
 
+; font
+RA6963_FONT_OFFSET = 32
+
 ; functions
 .global ra6963_init
 .global ra6963_await_cmd_or_data
@@ -52,9 +55,11 @@ RA6963_DATA_READ = 0xC5
 .global ra6963_modify_byte
 .global ra6963_draw_xbm
 .global ra6963_set_graphic_home_address
+.global ra6963_set_text_home_address
 .global ra6963_add_to_zero_offset
 .global ra6963_apply_zero_offset
 .global ra6963_memset
+.global ra6963_set_cursor_pointer
 
 ; variables
 .global ra6963_zero_offset

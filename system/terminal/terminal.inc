@@ -1,18 +1,23 @@
+TERMINAL_CHAR_WIDTH = 8
+TERMINAL_CHAR_HEIGHT = 8
+
 TERMINAL_DISPLAY_WIDTH = 240
 TERMINAL_DISPLAY_HEIGHT = 64
-TERMINAL_DISPLAY_WIDTH_BYTES = 240 / 8
-TERMINAL_LINE_HEIGHT = 10
-TERMINAL_LINE_HEIGHT_BYTES = TERMINAL_LINE_HEIGHT * TERMINAL_DISPLAY_WIDTH_BYTES
-TERMINAL_INPUT_STRING_SIZE = 100 ; bytes
+
+TERMINAL_WIDTH = TERMINAL_DISPLAY_WIDTH / TERMINAL_CHAR_WIDTH
+TERMINAL_HEIGHT = TERMINAL_DISPLAY_HEIGHT / TERMINAL_CHAR_HEIGHT
 
 ; functions
-.global terminal_putstr
+.global terminal_init
+.global terminal_reset
 .global terminal_putchar
-.global terminal_process_newline
-.global terminal_get_input_string
+.global terminal_putstr
+.global terminal_cursor_right
+.global terminal_cursor_newline
+.global terminal_view_area_scroll_down
 
 ; variables
-.global terminal_current_coordinates
-.global terminal_input_string
+.global terminal_cursor_coordinates
+.global terminal_view_area_address
 
 ; vim: set ft=asm:

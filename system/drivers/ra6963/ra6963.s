@@ -46,7 +46,34 @@ ra6963_set_graphic_home_address:
     ld a, (ix + 1)  ; address high byte
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
-    ld a, RA6963_SET_GRAPHIC_HOME_ADDRES
+    ld a, RA6963_SET_GRAPHIC_HOME_ADDRESS
+    out (IO_LCD_CMD_ADDR), a
+
+    pop ix  ; restoring ix
+    pop af  ; restoring af
+
+    exx  ; exchanging register pairs with their shadow
+    pop hl  ; return address
+    pop bc  ; arg1
+    push hl  ; return address
+    exx  ; restoring registers
+    ret
+
+ra6963_set_text_home_address:
+    push af  ; storing af
+    push ix  ; storing ix
+    ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 2 reg pairs and the return address
+    add ix, sp  ; loading sp value to ix
+
+    ; set text home addres
+    call ra6963_await_cmd_or_data
+    ld a, (ix + 0)  ; address low byte
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, (ix + 1)  ; address high byte
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, RA6963_SET_TEXT_HOME_ADDRESS
     out (IO_LCD_CMD_ADDR), a
 
     pop ix  ; restoring ix
@@ -62,7 +89,7 @@ ra6963_set_graphic_home_address:
 ra6963_set_address_pointer:
     push af  ; storing af
     push ix  ; storing ix
-    ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 3 reg pairs and the return address
+    ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 2 reg pairs and the return address
     add ix, sp  ; loading sp value to ix
 
     call ra6963_await_cmd_or_data
@@ -73,6 +100,32 @@ ra6963_set_address_pointer:
     out (IO_LCD_DATA_ADDR), a
     call ra6963_await_cmd_or_data
     ld a, RA6963_SET_ADDRESS_POINTER
+    out (IO_LCD_CMD_ADDR), a
+
+    pop ix  ; restoring ix
+    pop af  ; restoring af
+
+    exx  ; exchanging register pairs with their shadow
+    pop hl  ; return address
+    pop bc  ; arg1
+    push hl  ; return address
+    exx  ; restoring registers
+    ret
+
+ra6963_set_cursor_pointer:
+    push af  ; storing af
+    push ix  ; storing ix
+    ld ix, 6  ; there is no way to set load sp value to ix, skipping pushed 2 reg pairs and the return address
+    add ix, sp  ; loading sp value to ix
+
+    call ra6963_await_cmd_or_data
+    ld a, (ix + 0)  ; writing x
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, (ix + 1)  ; writing y
+    out (IO_LCD_DATA_ADDR), a
+    call ra6963_await_cmd_or_data
+    ld a, RA6963_SET_CURSOR_POSITION
     out (IO_LCD_CMD_ADDR), a
 
     pop ix  ; restoring ix
